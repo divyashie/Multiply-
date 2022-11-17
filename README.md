@@ -1,3 +1,6 @@
+# Context
+At Multiply, we are responsible for changing the prices of products on e-commerce marketplaces such as Amazon. For any particular product, we periodically want to refresh the product information e.g. what are the prices of our competitors, do we have any new reviews. Some products require refreshing more frequently than others depending on their popularity. This is where you come in.
+
 # Batch Jobs Manager
 Your team is responsible for refreshing information that we have regarding various products. You have been tasked with creating the batches that will be queued for refresh at any particular time.
 You are provided with a table of products with each product having a name and refresh frequency info. Your expected output is a list containing the batches for the day and specifying which products should be included in each batch. For example in the below case:

@@ -1,5 +1,3 @@
-# from products import ProdFreqDB
-from models import Product, ProdFreqDB
 from typing import List, Dict
 from math import ceil
 import datetime
