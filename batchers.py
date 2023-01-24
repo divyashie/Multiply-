@@ -1,124 +1,45 @@
-from email import header
 from typing import List, Dict
-from math import ceil
-import datetime
-import random
-import csv 
 
 # for small db
 DAILY_BATCHES = 6
 MAX_BATCH_SIZE = 2
 
-#Read csv file 
-datafile = "db.csv"
-product_frequency = {} 
-with open(datafile, mode="r") as inp: 
-    reader = csv.reader(inp) 
-    product_frequency = {rows[0]: rows[1] for rows in reader[1:]} 
-
 # # for large db
 # DAILY_BATCHES = 40
 # MAX_BATCH_SIZE = 6
-
-# def create_batches(
-#     # Your list of args
-# ) -> List[str]:
-#     """
-#     Create a required number of scraping batches. Presumed this will be run once daily
-
-#     :param num_batches: Total number of batches to create. Assumed to be a daily value
-#     :param max_batch_size: Maximum size of each batch. actual size <= max_batch_size
-#     :Add more params as you may require:
-#     :raises ValueError: if the defined num_batches <= 0 or max_batch_size < 1
-#     """
-#     if num_batches <= 0:
-#         raise ValueError(
-#             "Cannot have 0 or negative number of batches. Current number: {}".format(
-#                 num_batches
-#             )
-#         )
-#     if max_batch_size < 1:
-#         raise ValueError(
-#             "Cannot have 0 or negative maximum batch size. Current number: {}".format(
-#                 max_batch_size
-#             )
-#         )
     
+def unique_tuple(tup): 
+    res = tuple() 
+    results = [] 
+    for elem in tup: 
+        if elem not in res and len(res) != MAX_BATCH_SIZE: 
+            res += (elem,) 
+        else: 
+            results.append(res)
+            res = tuple() 
+            res += (elem,) 
+    results.append(res)
+    return results
 
-#     # You will need to fake moving time forward. You are free to decide
-#     # How small/big each time step will be
-#     time_step = # 
-#     batches = []
-#     for i in range(num_batches):
-#         batch = create_batch()  # create_batch will need some args
-#         batches.append(batch)
-#         current_datetime += time_step
-#         create_batch_kwarg["current_datetime"] = current_datetime 
-#     return batches
-    
-
-
-# def create_batch(
-#     # You may include whichever args you need
-# ) -> str:
-
-#     # Your code here ...
-#     return batch
-
-# def create_batches(
-#     # Your list of args
-# ) -> List[str]:
-#     """
-#     Create a required number of scraping batches. Presumed this will be run once daily
-
-#     :param num_batches: Total number of batches to create. Assumed to be a daily value
-#     :param max_batch_size: Maximum size of each batch. actual size <= max_batch_size
-#     :Add more params as you may require:
-#     :raises ValueError: if the defined num_batches <= 0 or max_batch_size < 1
-#     """
-#     if num_batches <= 0:
-#         raise ValueError(
-#             "Cannot have 0 or negative number of batches. Current number: {}".format(
-#                 num_batches
-#             )
-#         )
-#     if max_batch_size < 1:
-#         raise ValueError(
-#             "Cannot have 0 or negative maximum batch size. Current number: {}".format(
-#                 max_batch_size
-#             )
-#         )
-    
-
-#     # You will need to fake moving time forward. You are free to decide
-#     # How small/big each time step will be
-#     time_step = #
-#     batches = []
-#     for i in range(num_batches):
-#         batch = create_batch()  # create_batch will need some args
-#         batches.append(batch)
-#         current_datetime += time_step
-#         create_batch_kwarg["current_datetime"] = current_datetime 
-#     return batches
-    
-
-
-# def create_batch(
-#     # You may include whichever args you need
-# ) -> str:
-
-#     # Your code here ...
-#     return batch
-
-def create_batch_content(): 
+def update_product_frequency(day, product_frequency) -> Dict[str, int]: 
+    tracking_decimal_product = {} 
     for key, val in product_frequency.items(): 
-        res = tuple()
-        if val > 0:  
-            res.append(key)
-            product_frequency[key] -= val 
+        val = int(val)
+        if val % 1 != 0:  #check if its a decimal 
+            #track that product and its frequency 
+            tracking_decimal_product[key] = round(1/val) #number of times needs to appear 
+            
 
+    for key, val in tracking_decimal_product.items(): 
+        val = int(val)
+        if day % val == 0: #that's where this product needs to reappear in the product_frequency 
+            product_frequency[key] = int(1.0) #set product frequency to 1.0 for this product 
+        else: 
+            product_frequency[key] = int(0.0) #set product frequency to 0.0 for this product 
+    return product_frequency
+    
 
-def create_batches() -> List[str]:
+def create_batches(updated_product) -> List[str]: 
     """
     This is how we map the days with batches on db.csv 
     day 1: (A, B) | (A, C) | (A) 
@@ -129,19 +50,29 @@ def create_batches() -> List[str]:
     day 6: (A, B) | (A)    | (A)
     day 7: (A, B) | (A, C) | (A)
     """
+    tup = tuple()
+    #find maximum value from dictionary 
+    control_loop = int(max(list(updated_product.values()))) 
+    while control_loop > 0: 
+        for key, val in updated_product.items(): 
+            val = int(val)
+            if val >0: 
+                updated_product[key] = val - 1#decrement  
+                tup += (key,) 
+        control_loop = int(max(list(updated_product.values()))) #need to update dictionary 
 
-    if MAX_BATCH_SIZE <1: 
+    batches = unique_tuple(tup)
+    if len(batches) <= 0:
         raise ValueError(
-             "Cannot have 0 or negative maximum batch size. Current number: {}".format(
-              MAX_BATCH_SIZE
+            "Cannot have 0 or negative number of batches. Current number: {}".format(
+                len(batches)
             )
-        ) 
+        )
 
-    num_batches = 0 
-    while num_batches < DAILY_BATCHES: 
-        #create content for our batch 
+    return batches 
 
-        num_batches +=1 
+
+
     
 
 
