@@ -6,3 +6,10 @@
 {"day ": "6", "batch 1": ["A"], "batch 2": ["B"], "batch 3": [" "], "batch 4": ["A"], "batch 5": [" "], "batch 6": ["A"]}
 {"day ": "7", "batch 1": ["A"], "batch 2": ["B"], "batch 3": [" "], "batch 4": ["C", "A"], "batch 5": [" "], "batch 6": ["A"]}
 
+{"day ": "1", "batch 1": [["A", "B"]], "batch 2": [" "], "batch 3": ["C", "A"], "batch 4": [" "], "batch 5": ["A"]}
+{"day ": "2", "batch 1": [["A", "B"]], "batch 2": [" "], "batch 3": ["A"], "batch 4": [" "], "batch 5": ["A"]}
+{"day ": "3", "batch 1": [["A", "B"]], "batch 2": [" "], "batch 3": ["A"], "batch 4": [" "], "batch 5": ["A"]}
+{"day ": "4", "batch 1": [["A", "B"]], "batch 2": [" "], "batch 3": ["C", "A"], "batch 4": [" "], "batch 5": ["A"]}
+{"day ": "5", "batch 1": [["A", "B"]], "batch 2": [" "], "batch 3": ["A"], "batch 4": [" "], "batch 5": ["A"]}
+{"day ": "6", "batch 1": [["A", "B"]], "batch 2": [" "], "batch 3": ["A"], "batch 4": [" "], "batch 5": ["A"]}
+{"day ": "7", "batch 1": [["A", "B"]], "batch 2": [" "], "batch 3": ["C", "A"], "batch 4": [" "], "batch 5": ["A"]}

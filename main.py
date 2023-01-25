@@ -13,8 +13,8 @@ import csv
 from batchers import * 
 import json 
 
-datafile = "db_large.csv"
-#datafile = "db.csv"
+#datafile = "db_large.csv"
+datafile = "db.csv"
 num_days = 7
 
 def readFile(datafile): 
@@ -55,6 +55,8 @@ def getBatches():
         decimal_product = trackDecimalProduct(product_frequency)
         updated_product_frequency = updateProductFrequency(i, product_frequency, decimal_product)
         list_batches = create_batches(updated_product_frequency)
+        print(list_batches, len(list_batches))
+        
         day = f"{i + 1}" 
         data_dict = {"day ": day}
         for idx, batch in enumerate(list_batches): 
@@ -64,7 +66,7 @@ def getBatches():
             output.write(json.dumps(data_dict))
             output.write('\n')
 
-    return list_batches 
+
 
 def main(): 
     getBatches()
