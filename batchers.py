@@ -24,14 +24,12 @@ def unique_tuple(tup):
 def update_product_frequency(day, product_frequency) -> Dict[str, int]: 
     tracking_decimal_product = {} 
     for key, val in product_frequency.items(): 
-        val = int(val)
         if val % 1 != 0:  #check if its a decimal 
             #track that product and its frequency 
             tracking_decimal_product[key] = round(1/val) #number of times needs to appear 
             
 
     for key, val in tracking_decimal_product.items(): 
-        val = int(val)
         if day % val == 0: #that's where this product needs to reappear in the product_frequency 
             product_frequency[key] = int(1.0) #set product frequency to 1.0 for this product 
         else: 
