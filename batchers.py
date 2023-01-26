@@ -1,15 +1,15 @@
 from random import randrange 
 ##for small db
-DAILY_BATCHES = 6
-MAX_BATCH_SIZE = 2
+# DAILY_BATCHES = 6
+# MAX_BATCH_SIZE = 2
 
 # # for large db
-# DAILY_BATCHES = 40
-# MAX_BATCH_SIZE = 6
+DAILY_BATCHES = 40
+MAX_BATCH_SIZE = 6
 
 def rearrangeResults(results): 
     """
-    Rearrange array such that no two adjacent elements are next to each other 
+    Rearrange array such that no two adjacent elements are next to each other.
     """
     for i in range(len(results) -1): 
         while results[i] == results[i+1]: 
@@ -18,7 +18,9 @@ def rearrangeResults(results):
     return results 
 
 def unique_tuple(tup): 
-    #Ensures that MAX_BATCH_SIZE is respected for each batch 
+    """
+    Ensure that all elements inside of the batch are unique and match the MAX_BATCH_SIZE req.
+    """
     res = tuple() 
     results = [] 
     for elem in tup: 
@@ -32,52 +34,55 @@ def unique_tuple(tup):
     return results
 
 def match_batch_size(results): 
-    while len(results) != DAILY_BATCHES: 
-        low = 0
-        high = len(results) 
-        while low <= high: 
-            mid = low + (high - low) // 2 
-            if mid == 0: 
-                break 
-            
-            left = results[0: mid]
-            right = results[mid+ 1: len(results)]
-            middle = [(tuple(results[mid]))]
-            
-            results = left + [(' ',)] + middle + [(' ',)] + right 
+    """
+    Binary Variance of Inserting empty batches and periodically split a batch to match DAILY_BATCHES.
+    """
+    low = 0  
+    high = len(results) 
+    while (len(results) != DAILY_BATCHES) or (low <= high): 
+        mid = low + (high - low) // 2 
+        # add empty spaces in between mid 
+        left = results[0: mid]
+        right = results[mid +1: len(results)] 
+        middle = results[mid] 
 
-            if len(results) == DAILY_BATCHES: 
-                return results 
-            
-            if len(results) < DAILY_BATCHES: 
-                #split tuple into 1 each 
-                k = MAX_BATCH_SIZE - 1 
-                for left_tuple in left: 
-                    args = tuple(zip(*[iter(left)]*k)) #(5 alphas) , (1 alpha)
-                    print(args)
-                    pos = results.index(left_tuple) 
-                    results.remove(left_tuple) 
-                    for arg in args: 
-                        results.insert(pos, arg)
-                        pos += 1 
-                        # rem = tuple()
-                        # for arg in args[1:]: 
-                        #     rem += arg 
-                        # results.insert(pos+1, rem) #split one item at it to check against if length has increased 
-                        # #check if len(results) meet required size and break 
-                        if len(results) == DAILY_BATCHES: 
-                            return results 
-                        
-                    high = mid -1 
-            else: 
-                #remove empty batches 
-                results.remove((' ',))
-                low = mid + 1 
-        return results
+        tuple_results = left + [(' ',)] + [middle] + [(' ',)] + right 
+        results = tuple_results 
+        
+        if len(results) == DAILY_BATCHES: 
+            return results
+        elif len(results) < DAILY_BATCHES: 
+            #split each tuple into mini tuple element at a time and check 
+            print("HELLO")
+            for tup_batch in results: 
+                print(tup_batch)
+                #this is the first tuple batch 
+                pos = results.index(tup_batch)
+                results.remove(tup_batch)
+                args = tuple(zip(*[iter(tup_batch)]*(MAX_BATCH_SIZE - 1))) 
+                print(args)
+                for idx, arg in enumerate(args): 
+                    results.insert(pos, arg)
+                    pos += 1 
+                    singles = args[idx + 1: len(args)]
+                    rem = tuple()
+                    for single in singles: 
+                        rem += single 
+                    results.insert(pos, rem)
+                    pos += 1 
+                    if len(results) == DAILY_BATCHES: 
+                        return results 
+            high = mid - 1 
+        else: 
+            #remove empty batches 
+            results.remove((' ',))
+            low = mid + 1 
+    return results 
         
 
 def create_batches(updated_product): 
     """
+    creates unique pattern for batch matching its frequency. 
     This is how we map the days with batches on db.csv 
     day 1: (A) | (B) | () |  (A, C) | () |(A) 
     day 2: (A) | (B) | () |   (A)   | () |(A) 
@@ -101,7 +106,6 @@ def create_batches(updated_product):
                 tup += (key,) 
         control_loop = int(float(max(list(updated_product.values())))) #need to update dictionary 
 
-    # print(tup)
     batches = unique_tuple(tup)
     final_batches = rearrangeResults(match_batch_size(batches))
     if len(final_batches) <= 0:

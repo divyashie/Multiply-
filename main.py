@@ -13,8 +13,8 @@ import csv
 from batchers import * 
 import json 
 
-#datafile = "db_large.csv"
-datafile = "db.csv"
+datafile = "db_large.csv"
+# datafile = "db.csv"
 num_days = 7
 
 def readFile(datafile): 
@@ -65,8 +65,6 @@ def getBatches():
         with open(output_file, 'a') as output: 
             output.write(json.dumps(data_dict))
             output.write('\n')
-
-
 
 def main(): 
     getBatches()
