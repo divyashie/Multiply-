@@ -53,7 +53,6 @@ def match_batch_size(results):
             return results
         elif len(results) < DAILY_BATCHES: 
             #split each tuple into mini tuple element at a time and check 
-            print("HELLO")
             for tup_batch in results: 
                 print(tup_batch)
                 #this is the first tuple batch 
